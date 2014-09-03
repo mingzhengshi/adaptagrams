@@ -2883,9 +2883,9 @@ void Router::outputDiagramSVG(std::string instanceName, LineReps *lineReps)
 void Router::outputDiagram(std::string instanceName)
 {
     outputDiagramText(instanceName);
-#ifdef SVG_OUTPUT
+//#ifdef SVG_OUTPUT
     outputInstanceToSVG(instanceName);
-#endif
+//#endif
 }
 
 void Router::outputDiagramText(std::string instanceName)

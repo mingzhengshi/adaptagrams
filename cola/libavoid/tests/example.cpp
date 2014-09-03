@@ -80,72 +80,51 @@ int main(void)
 }
 */
 
+
+// From bandgap_1_nooverlap_reduced_libavoid-debug.
 #include "libavoid/libavoid.h"
-#include <sstream>
 using namespace Avoid;
+int main(void) {
+    Router *router = new Router(
+            PolyLineRouting | OrthogonalRouting);
+    router->setRoutingPenalty((PenaltyType)0, 50);
+    router->setRoutingPenalty((PenaltyType)1, 0);
+    router->setRoutingPenalty((PenaltyType)2, 400);
+    router->setRoutingPenalty((PenaltyType)3, 4000);
+    router->setRoutingPenalty((PenaltyType)4, 110);
+    router->setRoutingParameter(idealNudgingDistance, 25);
 
-void test()
-{
-    Avoid::ConnEnd end1;
-    Avoid::ConnEnd end2;
-    Avoid::Polygon poly;
-    Avoid::Router * router1 = new Avoid::Router(Avoid::OrthogonalRouting);
-    router1->setTransactionUse(true);
-    router1->setRoutingPenalty(Avoid::segmentPenalty);
-    router1->setRoutingPenalty(Avoid::crossingPenalty);
-    router1->setRoutingPenalty(Avoid::fixedSharedPathPenalty, 9000);
-    router1->setRoutingOption(Avoid::penaliseOrthogonalSharedPathsAtConnEnds, true);
-    router1->setRoutingParameter(idealNudgingDistance, 25);
-    poly = Avoid::Polygon(4);
-    poly.setPoint(0, Avoid::Point(50760, 50691));
-    poly.setPoint(1, Avoid::Point(50760, 50775));
-    poly.setPoint(2, Avoid::Point(50640, 50775));
-    poly.setPoint(3, Avoid::Point(50640, 50691));
-    Avoid::ShapeRef * shape386142480 = new Avoid::ShapeRef(router1, poly, 386142480);
-    Avoid::ShapeConnectionPin * pin386142480_0 = new Avoid::ShapeConnectionPin(shape386142480, 1,                  0.5,  0.40476190476190477,                    true, 0, 13);
-    pin386142480_0->setExclusive(true);
-    Avoid::ShapeConnectionPin * pin386142480_1 = new Avoid::ShapeConnectionPin(shape386142480, 2,                  0.5,                    1,                   true, 10, 2);
-    pin386142480_1->setExclusive(true);
-    poly = Avoid::Polygon(4);
-    poly.setPoint(0, Avoid::Point(51185, 50765));
-    poly.setPoint(1, Avoid::Point(51185, 50935));
-    poly.setPoint(2, Avoid::Point(50975, 50935));
-    poly.setPoint(3, Avoid::Point(50975, 50765));
-    Avoid::ShapeRef * shape300136482 = new Avoid::ShapeRef(router1, poly, 300136482);
-    Avoid::ShapeConnectionPin * pin300136482_0 = new Avoid::ShapeConnectionPin(shape300136482, 1,                    0,                  0.5,                   true, 10, 4);
-    pin300136482_0->setExclusive(true);
-    Avoid::ShapeConnectionPin * pin300136482_1 = new Avoid::ShapeConnectionPin(shape300136482, 2,  0.95238095238095233,                  0.5,                   true, 10, 8);
-    pin300136482_1->setExclusive(true);
-    poly = Avoid::Polygon(4);
-    poly.setPoint(0, Avoid::Point(50854, 50840));
-    poly.setPoint(1, Avoid::Point(50854, 50935));
-    poly.setPoint(2, Avoid::Point(50796, 50935));
-    poly.setPoint(3, Avoid::Point(50796, 50840));
-    Avoid::ShapeRef * shape51003942 = new Avoid::ShapeRef(router1, poly, 51003942);
-    Avoid::ShapeConnectionPin * pin51003942_0 = new Avoid::ShapeConnectionPin(shape51003942, 1,                  0.5,  0.10526315789473684,                   true, 10, 1);
-    pin51003942_0->setExclusive(true);
-    Avoid::JunctionRef * junction502411221 = new Avoid::JunctionRef(router1, Avoid::Point(50825, 50850), 502411221);
-    end1 = Avoid::ConnEnd(shape386142480, 2);
-    end2 = Avoid::ConnEnd(junction502411221);
-    new Avoid::ConnRef(router1, end1, end2);
-    end1 = Avoid::ConnEnd(junction502411221);
-    end2 = Avoid::ConnEnd(shape300136482, 1);
-    new Avoid::ConnRef(router1, end1, end2);
-    end1 = Avoid::ConnEnd(shape51003942, 1);
-    end2 = Avoid::ConnEnd(junction502411221);
-    new Avoid::ConnRef(router1, end1, end2);
-    router1->processTransaction();
+    Polygon poly143407352(4);
+    poly143407352.ps[0] = Point(5810, 5200);
+    poly143407352.ps[1] = Point(5810, 5000);
+    poly143407352.ps[2] = Point(5450, 5000);
+    poly143407352.ps[3] = Point(5450, 5200);
+    new ShapeRef(router, poly143407352, 143407352);
 
-    //router1->outputDiagram("output/buildOrthogonalChannelInfo1");
-    router1->outputDiagramText("output/buildOrthogonalChannelInfo1");
-    delete router1;
-}
+    //router->processTransaction();
 
-extern "C" int main(void)
-{
-    test();
-    return 0;
-}
+    Polygon poly124950386(4);
+    poly124950386.ps[0] = Point(4900, 4000);
+    poly124950386.ps[1] = Point(4900, 3800);
+    poly124950386.ps[2] = Point(4540, 3800);
+    poly124950386.ps[3] = Point(4540, 4000);
+    new ShapeRef(router, poly124950386, 124950386);
+
+    ConnRef *connRef373967044 = new ConnRef(router, 373967044);
+    ConnEnd srcPt373967044(Point(4890, 3950), 8);
+    connRef373967044->setSourceEndpoint(srcPt373967044);
+    ConnEnd dstPt373967044(Point(5460, 5150), 4);
+    connRef373967044->setDestEndpoint(dstPt373967044);
+    connRef373967044->setRoutingType((ConnType)2);
+
+    router->processTransaction();
+    router->outputDiagram("output/orthordering-01");
+
+    int crossings = router->existsCrossings();
+
+    delete router;
+    return (crossings > 0) ? 1 : 0;
+};
 
 
 

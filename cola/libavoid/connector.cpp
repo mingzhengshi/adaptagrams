@@ -1118,7 +1118,7 @@ void ConnRef::generateCheckpointsPath(std::vector<Point>& path,
                     path[index].vn = vertInf->id.vn;
                 }
                 vertices[index] = vertInf;
-                vertInf = vertInf->pathNext;
+                vertInf = dynamic_cast<VertInf *>(vertInf->pathNext);
             }
             lastSuccessfulIndex = i;
         }
@@ -1221,9 +1221,9 @@ void ConnRef::generateStandardPath(std::vector<Point>& path,
 #endif
             VertInf *prior = NULL;
             for (VertInf *curr = tar; curr != m_start_vert->pathNext;
-                    curr = curr->pathNext)
+                    curr = dynamic_cast<VertInf *>(curr->pathNext))
             {
-                if (!validateBendPoint(curr->pathNext, curr, prior))
+                if (!validateBendPoint(dynamic_cast<VertInf *>(curr->pathNext), curr, prior))
                 {
                     unwind = true;
                     break;
@@ -1272,7 +1272,7 @@ void ConnRef::generateStandardPath(std::vector<Point>& path,
     vertices.resize(pathlen);
 
     unsigned int j = pathlen - 1;
-    for (VertInf *i = tar; i != m_src_vert; i = i->pathNext)
+    for (VertInf *i = tar; i != m_src_vert; i = dynamic_cast<VertInf *>(i->pathNext))
     {
         path[j] = i->point;
         vertices[j] = i;

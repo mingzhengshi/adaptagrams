@@ -135,7 +135,25 @@ typedef unsigned short references_t;
 
 class ANode;
 
-class VertInf
+class VertBase
+{
+    public:
+        VertBase(const VertID& vid, const Point& vpoint);
+        virtual ~VertBase() {}
+
+        VertID id;
+        Point  point;
+        VertBase *pathNext;
+
+        references_t retain(void);
+        references_t release(void);
+
+    private:
+        // Reference count
+        references_t m_reference_count;
+};
+
+class VertInf : public VertBase
 {
     public:
         VertInf(Router *router, const VertID& vid, const Point& vpoint,
@@ -166,12 +184,9 @@ class VertInf
         void deactivateInactiveOneBendVisEdges(bool checkPins = true);
         EdgeInfList inactiveOneBendVisEdges;
 
-        references_t retain(void);
-        references_t release(void);
-
         Router *_router;
-        VertID id;
-        Point  point;
+        //VertID id;
+        //Point  point;
         VertInf *lstPrev;
         VertInf *lstNext;
         VertInf *shPrev;
@@ -182,7 +197,7 @@ class VertInf
         unsigned int orthogVisListSize;
         EdgeInfList invisList;
         unsigned int invisListSize;
-        VertInf *pathNext;
+        //VertInf *pathNext;
 
         // The tree root and distance value used when computing MTSTs.
         // XXX: Maybe these should be allocated as a separate struct
@@ -199,9 +214,6 @@ class VertInf
         // Flags for orthogonal visibility properties, i.e., whether the 
         // line points to a shape edge, connection point or an obstacle.
         unsigned int orthogVisPropFlags;
-    private:
-        // Reference count
-        references_t m_reference_count;
 };
 
 

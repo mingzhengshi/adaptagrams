@@ -157,13 +157,33 @@ ostream& operator<<(ostream& os, const VertID& vID)
     return os << '[' << vID.objID << ',' << vID.vn << ']';
 }
 
+VertBase::VertBase(const VertID& vid, const Point& vpoint)
+    :id(vid),
+     point(vpoint),
+     pathNext(NULL),
+     m_reference_count(0)
+{
+    point.id = vid.objID;
+    point.vn = vid.vn;
+}
 
+references_t VertBase::retain(void)
+{
+    return ++m_reference_count;
+}
+
+references_t VertBase::release(void)
+{
+    COLA_ASSERT(m_reference_count > 0);
+    return --m_reference_count;
+}
 
 VertInf::VertInf(Router *router, const VertID& vid, const Point& vpoint, 
         const bool addToRouter)
-    : _router(router),
-      id(vid),
-      point(vpoint),
+    : VertBase(vid, vpoint),
+      _router(router),
+      //id(vid),
+      //point(vpoint),
       lstPrev(NULL),
       lstNext(NULL),
       shPrev(NULL),
@@ -171,15 +191,15 @@ VertInf::VertInf(Router *router, const VertID& vid, const Point& vpoint,
       visListSize(0),
       orthogVisListSize(0),
       invisListSize(0),
-      pathNext(NULL),
+      //pathNext(NULL),
       m_orthogonalPartner(NULL),
       m_treeRoot(NULL),
       visDirections(ConnDirNone),
-      orthogVisPropFlags(0),
-      m_reference_count(0)
+      orthogVisPropFlags(0)//,
+      //m_reference_count(0)
 {
-    point.id = vid.objID;
-    point.vn = vid.vn;
+    //point.id = vid.objID;
+    //point.vn = vid.vn;
 
     if (addToRouter)
     {
@@ -191,18 +211,6 @@ VertInf::VertInf(Router *router, const VertID& vid, const Point& vpoint,
 VertInf::~VertInf()
 {
     COLA_ASSERT(orphaned());
-}
-
-
-references_t VertInf::retain(void)
-{
-    return ++m_reference_count;
-}
-
-references_t VertInf::release(void)
-{
-    COLA_ASSERT(m_reference_count > 0);
-    return --m_reference_count;
 }
 
 // This is called on connection point vertices and used to add all 1-bend
@@ -441,7 +449,7 @@ void VertInf::setVisibleDirections(const ConnDirFlags directions)
 unsigned int VertInf::pathLeadsBackTo(const VertInf *start) const
 {
     unsigned int pathlen = 1;
-    for (const VertInf *i = this; i != start; i = i->pathNext)
+    for (const VertInf *i = this; i != start; i = dynamic_cast<VertInf *>(i->pathNext))
     {
         if ((pathlen > 1) && (i == this))
         {

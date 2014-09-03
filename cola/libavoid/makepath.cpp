@@ -1250,7 +1250,7 @@ void AStarPathPrivate::search(ConnRef *lineRef, VertInf *src, VertInf *tar, Vert
             // us to first search in a collinear direction from the previous 
             // segment.
             bool addToPending = false;
-            bestNode = newANode(ANode(start->pathNext, timestamp++), 
+            bestNode = newANode(ANode(dynamic_cast<VertInf *>(start->pathNext), timestamp++),
                     addToPending);
             bestNode->inf->aStarDoneNodes.push_back(bestNode);
             ++exploredCount;

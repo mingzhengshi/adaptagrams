@@ -244,7 +244,7 @@ void MinimumTerminalSpanningTree::buildHyperedgeTreeToRoot(VertInf *currVert,
 
         prevNode = addedNode;
         prevVert = currVert;
-        currVert = currVert->pathNext;
+        currVert = dynamic_cast<VertInf *>(currVert->pathNext);
     }
 }
 
@@ -270,7 +270,7 @@ VertInf **MinimumTerminalSpanningTree::resetDistsForPath(VertInf *currVert, Vert
 
         terminals.insert(currVert);
 
-        currVert = currVert->pathNext;
+        currVert = dynamic_cast<VertInf *>(currVert->pathNext);
     }
 
     // Shouldn't get here.
@@ -519,8 +519,8 @@ void MinimumTerminalSpanningTree::constructSequential(void)
                         e->m_vert2->point.x, e->m_vert2->point.y, "red");
                 ++step_count;
             }
-            buildHyperedgeTreeToRoot(e->m_vert1->pathNext, node1, e->m_vert1);
-            buildHyperedgeTreeToRoot(e->m_vert2->pathNext, node2, e->m_vert2);
+            buildHyperedgeTreeToRoot(dynamic_cast<VertInf *>(e->m_vert1->pathNext), node1, e->m_vert1);
+            buildHyperedgeTreeToRoot(dynamic_cast<VertInf *>(e->m_vert2->pathNext), node2, e->m_vert2);
         }
     }
     if (debug_fp)
@@ -739,7 +739,7 @@ void MinimumTerminalSpanningTree::constructInterleaved(void)
 
         // For each edge from this vertex...
         LayeredOrthogonalEdgeList edgeList = getOrthogonalEdgesFromVertex(u,
-                u->pathNext);
+                dynamic_cast<VertInf *>(u->pathNext));
         for (LayeredOrthogonalEdgeList::const_iterator edge = edgeList.begin(); 
                 edge != edgeList.end(); ++edge)
         {
@@ -1031,8 +1031,8 @@ void MinimumTerminalSpanningTree::commitToBridgingEdge(EdgeInf *e, unsigned& ste
                 vert1->point.y, vert2->point.x,
                 vert2->point.y, "red");
     }
-    buildHyperedgeTreeToRoot(vert1->pathNext, node1, vert1, true);
-    buildHyperedgeTreeToRoot(vert2->pathNext, node2, vert2, true);
+    buildHyperedgeTreeToRoot(dynamic_cast<VertInf *>(vert1->pathNext), node1, vert1, true);
+    buildHyperedgeTreeToRoot(dynamic_cast<VertInf *>(vert2->pathNext), node2, vert2, true);
     
     if (debug_fp)
     {
