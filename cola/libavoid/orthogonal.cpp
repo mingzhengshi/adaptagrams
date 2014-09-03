@@ -1352,7 +1352,7 @@ public:
 
         // Create L-shaped visibility edges between appropriate vertices from
         // each LineSegment.
-        VertInf *bendVertex = NULL;
+        VertBase *bendVertex = NULL;
         const bool orthogonal = true;
         for (VertSet::iterator horiVertex = vertInfs.begin(); 
                 horiVertex != vertInfs.end(); ++horiVertex)
@@ -1465,9 +1465,9 @@ public:
 
                 if (bendVertex == NULL)
                 {
-                    bendVertex = new VertInf(router, dummyBendID, 
+                    bendVertex = new VertBase(dummyBendID,
                             Point((*vertVertex)->point.x,
-                                  (*horiVertex)->point.y), false);
+                                  (*horiVertex)->point.y));
                 }
                 edge->setBendVertex(bendVertex);
 

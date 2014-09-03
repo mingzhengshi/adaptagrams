@@ -78,8 +78,8 @@ class EdgeInf
         double mtstDist(void) const;
         void setMtstDist(const double joinCost);
 
-        void setBendVertex(VertInf *vert);
-        VertInf *bendVertex(void);
+        void setBendVertex(VertBase *vert);
+        VertBase *bendVertex(void);
         bool isHuggingFromVertex(VertInf *v) const;
         void setHuggingProperties(bool forward, bool backward);
 
@@ -110,7 +110,8 @@ class EdgeInf
         FlagList  m_conns;
         double  m_dist;
         double  m_mtst_dist;
-        VertInf *m_bend_vert;
+        //VertInf *m_bend_vert;
+        VertBase *m_bend_vert;
 };
 
 

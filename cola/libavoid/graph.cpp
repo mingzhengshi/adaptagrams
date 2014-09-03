@@ -387,7 +387,7 @@ void EdgeInf::addBlocker(int b)
 }
 
 
-void EdgeInf::setBendVertex(VertInf *vert)
+void EdgeInf::setBendVertex(VertBase *vert)
 {
     COLA_ASSERT(m_bend_vert == NULL);
     COLA_ASSERT(vert != NULL);
@@ -405,7 +405,7 @@ void EdgeInf::setBendVertex(VertInf *vert)
     }
 }
 
-VertInf *EdgeInf::bendVertex(void)
+VertBase *EdgeInf::bendVertex(void)
 {
     return m_bend_vert;
 }

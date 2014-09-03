@@ -75,7 +75,7 @@ class ANode
 
         // The bend from the last visibility edge followed if using a 1-bend
         // visibility graph, otherwise NULL.
-        VertInf *bendVertex;
+        VertBase *bendVertex;
 
         ANode(VertInf *vinf, int time)
             : inf(vinf),
@@ -121,7 +121,7 @@ class ANode
                         (prevNode->inf == rhs->prevNode->inf));
             }
         }
-        void setPrevNode(ANode *prev, bool orthogonalGraph, VertInf *bend = NULL)
+        void setPrevNode(ANode *prev, bool orthogonalGraph, VertBase *bend = NULL)
         {
             prevNode = prev;
             bendVertex = bend;
@@ -1388,7 +1388,7 @@ void AStarPathPrivate::search(ConnRef *lineRef, VertInf *src, VertInf *tar, Vert
             
             // Set the index to the previous ANode that we reached
             // this ANode via.
-            VertInf *bend = (usingOneBendVisGraph) ? (*edge)->bendVertex() : NULL;
+            VertBase *bend = (usingOneBendVisGraph) ? (*edge)->bendVertex() : NULL;
             node.setPrevNode(bestNode, isOrthogonal, bend);
 
             VertInf *prevInf = (bestNode->prevNode) ?
