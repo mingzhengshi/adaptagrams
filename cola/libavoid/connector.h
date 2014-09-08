@@ -427,9 +427,9 @@ class AVOID_EXPORT ConnRef
         void performCallback(void);
         bool generatePath(void);
         void generateCheckpointsPath(std::vector<Point>& path,
-                std::vector<VertInf *>& vertices);
+                std::vector<VertBase *>& vertices);
         void generateStandardPath(std::vector<Point>& path,
-                std::vector<VertInf *>& vertices);
+                std::vector<VertBase *>& vertices);
         void unInitialise(void);
         void updateEndPoint(const unsigned int type, const ConnEnd& connEnd);
         void common_updateEndPoint(const unsigned int type, ConnEnd connEnd);
@@ -538,7 +538,7 @@ class ConnectorCrossings
 
 extern void splitBranchingSegments(Avoid::Polygon& poly, bool polyIsConn,
         Avoid::Polygon& conn, const double tolerance = 0);
-extern bool validateBendPoint(VertInf *aInf, VertInf *bInf, VertInf *cInf);
+extern bool validateBendPoint(VertBase *aInf, VertBase *bInf, VertBase *cInf);
 
 }
 

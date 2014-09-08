@@ -48,6 +48,7 @@ class Router;
 class ConnRef;
 class ShapeConnectionPin;
 typedef std::list<ConnRef *> ConnRefList;
+class VertBase;
 class VertInf;
 
 
@@ -234,12 +235,12 @@ class AVOID_EXPORT ConnEnd
         void connect(ConnRef *conn);
         void disconnect(const bool shapeDeleted = false);
         void usePin(ShapeConnectionPin *pin);
-        void usePinVertex(VertInf *pinVert);
+        void usePinVertex(VertBase *pinVert);
         void freeActivePin(void);
         unsigned int endpointType(void) const;
         bool isPinConnection(void) const;
         std::vector<Point> possiblePinPoints(void) const;
-        void assignPinVisibilityTo(VertInf *dummyConnectionVert, 
+        void assignPinVisibilityTo(VertInf *dummyConnectionVert,
                 VertInf *targetVert);
         void outputCode(FILE *fp, const char *srcDst,
                 unsigned int num = 0) const;

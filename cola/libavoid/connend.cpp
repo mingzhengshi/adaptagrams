@@ -191,7 +191,7 @@ void ConnEnd::usePin(ShapeConnectionPin *pin)
 
 
 // Marks this ConnEnd as using a particular ShapeConnectionPin's vertex.
-void ConnEnd::usePinVertex(VertInf *pinVert)
+void ConnEnd::usePinVertex(VertBase *pinVert)
 {
     COLA_ASSERT(m_active_pin == NULL);
     

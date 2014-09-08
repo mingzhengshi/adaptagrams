@@ -699,6 +699,11 @@ void EdgeInf::setHuggingProperties(bool forward, bool backward)
     //      required.
 EdgeInf *EdgeInf::existingEdge(VertInf *i, VertInf *j)
 {
+    if ((i == NULL) || (j == NULL))
+    {
+        return NULL;
+    }
+
     VertInf *selected = NULL;
 
     // Look through poly-line visibility edges.

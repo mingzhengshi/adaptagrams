@@ -817,7 +817,19 @@ bool validateBendPoint(VertInf *aInf, VertInf *bInf, VertInf *cInf)
 
     COLA_ASSERT(bInf != NULL);
     VertInf *dInf = bInf->shPrev;
-    VertInf *eInf = bInf->shNext;
+    VertInf*eInf = NULL;
+    VertInf *bVertInf = dynamic_cast<VertInf *> (bInf);
+    if (bVertInf)
+    {
+        dInf = bVertInf->shNext;
+        eInf = bVertInf->shPrev;
+    }
+    else
+    {
+        // TODO When using 1-bend graph, bends won't look like corner vertices.
+        //      Use ID properties to determine which shape corner this is instead.
+        return true;
+    }
     COLA_ASSERT(dInf != NULL);
     COLA_ASSERT(eInf != NULL);
 
@@ -964,7 +976,7 @@ bool ConnRef::generatePath(void)
     }
 
     std::vector<Point> path;
-    std::vector<VertInf *> vertices;
+    std::vector<VertBase *> vertices;
     if (m_checkpoints.empty())
     {
         generateStandardPath(path, vertices);
@@ -984,7 +996,8 @@ bool ConnRef::generatePath(void)
         if (m_router->InvisibilityGrph && (m_type == ConnType_PolyLine))
         {
             // TODO: Again, we could know this edge without searching.
-            EdgeInf *edge = EdgeInf::existingEdge(vertices[i - 1], vertices[i]);
+            // TODO Does this work with 1-bend vis graph?
+            EdgeInf *edge = EdgeInf::existingEdge(dynamic_cast<VertInf *>(vertices[i - 1]), dynamic_cast<VertInf *>(vertices[i]));
             if (edge) {
                 edge->addConn(m_reroute_flag_ptr);
             }
@@ -994,7 +1007,7 @@ bool ConnRef::generatePath(void)
             m_false_path = true;
         }
 
-        VertInf *vertex = vertices[i];
+        VertBase *vertex = vertices[i];
         if (vertex->pathNext && 
                 (vertex->pathNext->point == vertex->point))
         {
@@ -1035,7 +1048,7 @@ bool ConnRef::generatePath(void)
     db_printf("Output route:\n");
     for (size_t i = 0; i < output_route.ps.size(); ++i)
     {
-        db_printf("[%d,%d] %g, %g   ", output_route.ps[i].id, 
+        db_printf("[%d,%d] %g, %g   ", output_route.ps[i].id,
                 output_route.ps[i].vn, output_route.ps[i].x, 
                 output_route.ps[i].y);
     }
@@ -1046,7 +1059,7 @@ bool ConnRef::generatePath(void)
 }
 
 void ConnRef::generateCheckpointsPath(std::vector<Point>& path,
-        std::vector<VertInf *>& vertices)
+        std::vector<VertBase *>& vertices)
 {
     std::vector<VertInf *> checkpoints = m_checkpoint_vertices;
     checkpoints.insert(checkpoints.begin(), src());
@@ -1102,7 +1115,7 @@ void ConnRef::generateCheckpointsPath(std::vector<Point>& path,
             size_t prev_path_size = path.size();
             path.resize(prev_path_size + (pathlen - 1));
             vertices.resize(prev_path_size + (pathlen - 1));
-            VertInf *vertInf = end;
+            VertBase *vertInf = end;
             for (size_t index = path.size() - 1; index >= prev_path_size;
                     --index)
             {
@@ -1118,7 +1131,7 @@ void ConnRef::generateCheckpointsPath(std::vector<Point>& path,
                     path[index].vn = vertInf->id.vn;
                 }
                 vertices[index] = vertInf;
-                vertInf = dynamic_cast<VertInf *>(vertInf->pathNext);
+                vertInf = vertInf->pathNext;
             }
             lastSuccessfulIndex = i;
         }
@@ -1150,7 +1163,7 @@ void ConnRef::generateCheckpointsPath(std::vector<Point>& path,
 
 
 void ConnRef::generateStandardPath(std::vector<Point>& path,
-        std::vector<VertInf *>& vertices)
+        std::vector<VertBase *>& vertices)
 {
     VertInf *tar = m_dst_vert;
     size_t existingPathStart = 0;
@@ -1219,11 +1232,11 @@ void ConnRef::generateStandardPath(std::vector<Point>& path,
 #ifdef PATHDEBUG
             db_printf("\n\n\nSTART:\n\n");
 #endif
-            VertInf *prior = NULL;
-            for (VertInf *curr = tar; curr != m_start_vert->pathNext;
-                    curr = dynamic_cast<VertInf *>(curr->pathNext))
+            VertBase *prior = NULL;
+            for (VertBase *curr = tar; curr != m_start_vert->pathNext;
+                    curr = curr->pathNext)
             {
-                if (!validateBendPoint(dynamic_cast<VertInf *>(curr->pathNext), curr, prior))
+                if (!validateBendPoint(curr->pathNext, curr, prior))
                 {
                     unwind = true;
                     break;
@@ -1272,7 +1285,7 @@ void ConnRef::generateStandardPath(std::vector<Point>& path,
     vertices.resize(pathlen);
 
     unsigned int j = pathlen - 1;
-    for (VertInf *i = tar; i != m_src_vert; i = dynamic_cast<VertInf *>(i->pathNext))
+    for (VertBase *i = tar; i != m_src_vert; i = i->pathNext)
     {
         path[j] = i->point;
         vertices[j] = i;
