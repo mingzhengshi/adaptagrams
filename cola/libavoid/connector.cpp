@@ -821,8 +821,8 @@ bool validateBendPoint(VertInf *aInf, VertInf *bInf, VertInf *cInf)
     VertInf *bVertInf = dynamic_cast<VertInf *> (bInf);
     if (bVertInf)
     {
-        dInf = bVertInf->shNext;
-        eInf = bVertInf->shPrev;
+        dInf = bVertInf->shPrev;
+        eInf = bVertInf->shNext;
     }
     else
     {
