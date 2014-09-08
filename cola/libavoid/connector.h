@@ -538,7 +538,7 @@ class ConnectorCrossings
 
 extern void splitBranchingSegments(Avoid::Polygon& poly, bool polyIsConn,
         Avoid::Polygon& conn, const double tolerance = 0);
-extern bool validateBendPoint(VertBase *aInf, VertBase *bInf, VertBase *cInf);
+extern bool validateBendPoint(VertInf *aInf, VertInf *bInf, VertInf *cInf);
 
 }
 

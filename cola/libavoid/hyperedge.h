@@ -41,15 +41,15 @@ class ConnRef;
 class JunctionRef;
 class Router;
 class ConnEnd;
-class VertBase;
+class VertInf;
 
 typedef std::list<ConnEnd> ConnEndList;
 typedef std::list<ConnRef *> ConnRefList;
 typedef std::list<JunctionRef *> JunctionRefList;
-typedef std::list<VertBase *> VertexList;
+typedef std::list<VertInf *> VertexList;
 
 typedef std::set<ConnRef *> ConnRefSet;
-typedef std::set<VertBase *> VertexSet;
+typedef std::set<VertInf *> VertexSet;
 
 typedef std::vector<JunctionRef *> JunctionRefVector;
 typedef std::vector<ConnEndList> ConnEndListVector;

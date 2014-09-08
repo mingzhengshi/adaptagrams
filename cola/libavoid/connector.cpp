@@ -1236,7 +1236,7 @@ void ConnRef::generateStandardPath(std::vector<Point>& path,
             for (VertBase *curr = tar; curr != m_start_vert->pathNext;
                     curr = curr->pathNext)
             {
-                if (!validateBendPoint(curr->pathNext, curr, prior))
+                if (!validateBendPoint(dynamic_cast<VertInf *>(curr->pathNext), dynamic_cast<VertInf *>(curr), dynamic_cast<VertInf *>(prior)))
                 {
                     unwind = true;
                     break;
